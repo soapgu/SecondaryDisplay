@@ -1,6 +1,7 @@
 package com.demo.secondarydisplay;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -14,6 +15,8 @@ import android.view.WindowManager;
 import com.orhanobut.logger.Logger;
 
 public class MainActivity extends AppCompatActivity {
+
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Logger.i( "-----Target Display ID:%s Name:%s Flag:%s-----",display.getDisplayId(),display.getName(),flag );
 
         this.findViewById(R.id.button_start).setOnClickListener( v->launchPresentationSecScreen( display ) );
+        this.findViewById(R.id.button_count).setOnClickListener( v-> sendBroadcast());
     }
 
     private void launchActivitySecScreen(){
@@ -49,5 +53,14 @@ public class MainActivity extends AppCompatActivity {
         //presentation.getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         //presentation.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION);
         presentation.show();
+    }
+
+    private void sendBroadcast(){
+        count ++;
+        Intent intent = new Intent();
+        intent.setAction(Settings.broadcast);
+        intent.putExtra(Settings.count, count);
+        Logger.i("Sent Broadcasts");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
